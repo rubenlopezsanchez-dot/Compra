@@ -1176,6 +1176,7 @@ const statusEl = $("mercStatus");
 const resultsEl = $("mercResults");
 let conn = null;
 let zone = "mad1";
+let zoneResolved = false;
 let ready = false;
 let lastDate = "";
 
@@ -1210,7 +1211,10 @@ async function initCatalog() {
                 body:JSON.stringify({new_postal_code:"28047"})
             });
             const resolved = response.headers.get("x-customer-wh");
-            if (response.ok && resolved) zone = resolved;
+            if (response.ok && resolved) {
+                zone = resolved;
+                zoneResolved = true;
+            }
         } catch (_) {
             // Si el navegador bloquea la API por CORS, se usa la zona general de Madrid.
         }
@@ -1246,7 +1250,7 @@ async function initCatalog() {
         lastDate = dates[0] && dates[0].d ? dates[0].d : "";
         if (!lastDate) throw new Error("No hay precios publicados para la zona " + zone);
         ready = true;
-        statusEl.textContent = "Catálogo listo · Madrid (" + zone + ") · última captura: " + lastDate;
+        statusEl.textContent = "Catálogo listo · " + (zoneResolved ? "CP 28047 → " : "zona general de Madrid (CP no confirmado) → ") + zone + " · última captura: " + lastDate;
         await searchProducts($("mercQuery").value);
     } catch (error) {
         statusEl.textContent = "No se pudo cargar el catálogo automático. " + (error && error.message ? error.message : error);
