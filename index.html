@@ -538,6 +538,18 @@ input:focus, select:focus {
 .coverage-no { color:#9b5148; }
 @media(max-width:600px) { .coverage-row { display:block; } .coverage-row span { display:block; text-align:left; margin-top:5px; } }
 
+/* Catálogo de productos Mercadona */
+.merc-search { display:grid; grid-template-columns:1fr; gap:9px; }
+.merc-item { display:flex; gap:11px; align-items:center; padding:12px 0; border-bottom:1px solid var(--line); }
+.merc-item:last-child { border-bottom:0; }
+.merc-item img,.merc-placeholder { width:64px; height:64px; object-fit:contain; display:grid; place-items:center; background:#fff; border:1px solid var(--line); border-radius:10px; }
+.merc-item-info { flex:1; min-width:0; }
+.merc-item-name { font-size:14px; font-weight:700; line-height:1.35; }
+.merc-item-meta { font-size:11px; color:var(--muted); margin-top:4px; }
+.merc-item-price { font-weight:800; color:var(--green); margin-top:5px; }
+.merc-add { border:0; border-radius:9px; padding:9px 11px; background:var(--light); color:var(--green); font-weight:700; white-space:nowrap; }
+@media(max-width:420px) { .merc-item { align-items:flex-start; flex-wrap:wrap; } .merc-item-info { min-width:calc(100% - 82px); } .merc-add { margin-left:75px; } }
+
 /* Interfaz más sencilla, visual e intuitiva */
 :root { --green:#16784e; --light:#eaf7ef; --bg:#f7faf8; --line:#e5eee8; }
 .wrap { max-width:680px; }
@@ -611,7 +623,7 @@ label[for="price"]::before { content:"💶 "; }
 <div class="tabs">
     <button class="tab active" data-tab="lista">Mi lista</button>
     <button class="tab" data-tab="tiendas">Supermercados</button>
-    <button class="tab" data-tab="catalogo">Catálogo</button>
+    <button class="tab" data-tab="catalogo">Mercadona</button>
 </div>
 
 <section id="lista" class="panel active">
@@ -726,40 +738,19 @@ label[for="price"]::before { content:"💶 "; }
 
 <section id="catalogo" class="panel">
     <div class="card">
-        <h2>Precios y productos de tu zona</h2>
-        <p class="note">Código postal configurado: <strong>28047 · Madrid</strong>. Desde aquí puedes consultar catálogos y comparadores que publican precios reales. Los precios pueden variar según la tienda y la fecha de actualización.</p>
-        <div class="catalog-source">
-            <div class="catalog-source-head">
-                <strong>OpenCesta · catálogo de Madrid</strong>
-                <span class="source-status">Datos de Mercadona y Ahorramás</span>
-            </div>
-            <p class="note">Publica snapshots diarios de productos y precios para la zona de Madrid. También incluye datos de DIA, aunque su zona no está individualizada por código postal.</p>
-            <a class="source-link" href="https://ruvelro.github.io/opencesta/" target="_blank" rel="noopener">Abrir catálogo y comparador <span>↗</span></a>
+        <h2>Catálogo de Mercadona</h2>
+        <p class="note">Busca productos y añádelos a tu lista con el precio del último catálogo publicado. Código postal: <strong>28047 · Madrid</strong>.</p>
+        <div class="merc-search">
+            <input id="mercQuery" type="search" placeholder="Busca leche, arroz, aceite, yogur..." value="leche" autocomplete="off">
+            <button class="primary" id="mercSearchBtn">Buscar productos</button>
         </div>
-        <div class="catalog-source">
-            <div class="catalog-source-head">
-                <strong>CholloSúper · comparador por código postal</strong>
-                <span class="source-status">Permite consultar tu zona</span>
-            </div>
-            <p class="note">Compara productos y cestas de varias cadenas. En DIA, Carrefour y Consum el precio puede cambiar según la tienda; introduce el código postal 28047 al entrar para consultar la zona correspondiente.</p>
-            <a class="source-link" href="https://chollosuper.com/" target="_blank" rel="noopener">Abrir comparador de precios <span>↗</span></a>
-        </div>
-    </div>
-
-    <div class="card">
-        <h2>Qué supermercados tienen datos</h2>
-        <div class="coverage-row"><strong>Mercadona</strong><span class="coverage-good">Catálogo y precios · Madrid</span></div>
-        <div class="coverage-row"><strong>Ahorramás</strong><span class="coverage-good">Catálogo y precios · Madrid</span></div>
-        <div class="coverage-row"><strong>DIA</strong><span class="coverage-partial">Precios disponibles · zona general</span></div>
-        <div class="coverage-row"><strong>Carrefour / Alcampo</strong><span class="coverage-no">Sin fuente automática fiable</span></div>
-        <div class="coverage-row"><strong>Lidl / Aldi</strong><span class="coverage-no">No publican un catálogo completo de alimentación con precios online</span></div>
-        <div class="coverage-row"><strong>Eroski</strong><span class="coverage-partial">Fuente viable, integración pendiente</span></div>
-        <p class="note">No se inventan precios ni se copian precios de otra provincia como si fueran de 28047. La integración automática dentro de esta app requiere un servicio que actualice el catálogo y lo entregue a GitHub Pages; la web estática por sí sola no puede ejecutar esa recogida diaria.</p>
+        <p id="mercStatus" class="note">Conectando con el catálogo de precios…</p>
+        <div id="mercResults"></div>
     </div>
     <div class="card">
-        <h2>Fuentes y actualización</h2>
-        <p class="note">OpenCesta publica datos abiertos con histórico y cobertura de Madrid. CholloSúper publica datos abiertos con licencia CC BY 4.0, pero sus ficheros públicos generales usan Cataluña como zona por defecto para algunas cadenas; para DIA, Carrefour y Consum hay que consultar el código postal en su comparador.</p>
-        <p class="note">Fuentes: <a href="https://github.com/ruvelro/opencesta" target="_blank" rel="noopener">OpenCesta</a> · <a href="https://chollosuper.com/datos" target="_blank" rel="noopener">CholloSúper – datos abiertos</a>.</p>
+        <h2>Sobre los precios</h2>
+        <p class="note">Los precios proceden de snapshots públicos de OpenCesta, actualizados diariamente. La aplicación intenta resolver el almacén correspondiente al CP 28047 con la API de Mercadona. Si el navegador no permite esa consulta, indicará que usa la zona general de Madrid (mad1), que puede no coincidir exactamente con tu tienda.</p>
+        <p class="note">Fuente: <a href="https://github.com/ruvelro/opencesta" target="_blank" rel="noopener">OpenCesta · datos abiertos e histórico de precios</a>. Los precios pueden variar por zona y fecha.</p>
     </div>
 </section>
 </main>
@@ -1165,6 +1156,164 @@ fillSelects();
 renderStoreGrid();
 render();
 
+window.addMercadonaProduct = function(item) {
+    document.getElementById("name").value = item.display_name;
+    document.getElementById("store").value = "Mercadona";
+    selectedStore = "Mercadona";
+    document.getElementById("price").value = Number(item.unit_price).toFixed(2);
+    document.getElementById("category").value = item.appCategory || "Alimentación y lácteos";
+    document.getElementById("qty").value = 1;
+    document.querySelector('[data-tab="lista"]').click();
+};
+
+</script>
+
+<script type="module">
+import * as duckdb from "https://cdn.jsdelivr.net/npm/@duckdb/duckdb-wasm@1.32.0/+esm";
+
+const $ = (id) => document.getElementById(id);
+const statusEl = $("mercStatus");
+const resultsEl = $("mercResults");
+let conn = null;
+let zone = "mad1";
+let ready = false;
+let lastDate = "";
+
+const euro = n => Number(n).toLocaleString("es-ES", {style:"currency", currency:"EUR"});
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+
+function categoryFor(name) {
+    const s = String(name || "").toLowerCase();
+    if (/fruta|verdura|hortaliza|ensalada/.test(s)) return "Frutas y verduras";
+    if (/carne|pollo|pavo|cerdo|ternera|pescado|marisco|jam[oó]n/.test(s)) return "Carne y pescado";
+    if (/agua|refresco|zumo|bebida/.test(s)) return "Bebidas";
+    if (/limpia|detergente|lavavajillas|fregasuelos/.test(s)) return "Limpieza";
+    if (/champ[uú]|gel|desodorante|higiene|crema dental/.test(s)) return "Higiene y cuidado personal";
+    if (/hogar|cocina|menaje|bazar/.test(s)) return "Hogar y bazar";
+    return "Alimentación y lácteos";
+}
+
+async function queryRows(sql, params=[]) {
+    const stmt = await conn.prepare(sql);
+    const result = await stmt.query(...params);
+    await stmt.close();
+    return result.toArray().map(row => row.toJSON());
+}
+
+async function initCatalog() {
+    try {
+        statusEl.textContent = "Resolviendo la zona de precios del CP 28047…";
+        try {
+            const response = await fetch("https://tienda.mercadona.es/api/postal-codes/actions/change-pc/", {
+                method:"PUT",
+                headers:{"Content-Type":"application/json"},
+                body:JSON.stringify({new_postal_code:"28047"})
+            });
+            const resolved = response.headers.get("x-customer-wh");
+            if (response.ok && resolved) zone = resolved;
+        } catch (_) {
+            // Si el navegador bloquea la API por CORS, se usa la zona general de Madrid.
+        }
+
+        statusEl.textContent = "Cargando catálogo de Madrid (" + zone + ")…";
+        const bundles = duckdb.getJsDelivrBundles();
+        const bundle = await duckdb.selectBundle(bundles);
+        const workerUrl = URL.createObjectURL(
+            new Blob(["importScripts('" + bundle.mainWorker + "');"], {type:"text/javascript"})
+        );
+        const worker = new Worker(workerUrl);
+        const db = new duckdb.AsyncDuckDB(new duckdb.ConsoleLogger(duckdb.LogLevel.WARNING), worker);
+        await db.instantiate(bundle.mainModule, bundle.pthreadWorker);
+        URL.revokeObjectURL(workerUrl);
+
+        await db.registerFileURL(
+            "prices.parquet",
+            "https://ruvelro.github.io/opencesta/data/prices.parquet",
+            duckdb.DuckDBDataProtocol.HTTP,
+            false
+        );
+        conn = await db.connect();
+        await conn.query("CREATE VIEW prices AS SELECT * FROM read_parquet('prices.parquet')");
+
+        const zones = await queryRows("SELECT DISTINCT zone FROM prices WHERE chain='mercadona'");
+        if (!zones.some(x => x.zone === zone)) {
+            zone = zones.some(x => x.zone === "mad1") ? "mad1" : (zones[0] && zones[0].zone);
+        }
+        const dates = await queryRows(
+            "SELECT max(captured_at) AS d FROM prices WHERE chain='mercadona' AND zone=?",
+            [zone]
+        );
+        lastDate = dates[0] && dates[0].d ? dates[0].d : "";
+        if (!lastDate) throw new Error("No hay precios publicados para la zona " + zone);
+        ready = true;
+        statusEl.textContent = "Catálogo listo · Madrid (" + zone + ") · última captura: " + lastDate;
+        await searchProducts($("mercQuery").value);
+    } catch (error) {
+        statusEl.textContent = "No se pudo cargar el catálogo automático. " + (error && error.message ? error.message : error);
+        console.error(error);
+    }
+}
+
+async function searchProducts(value) {
+    const q = String(value || "").trim();
+    if (!ready) return;
+    if (q.length < 2) {
+        resultsEl.innerHTML = '<div class="empty">Escribe al menos dos letras para buscar.</div>';
+        return;
+    }
+    statusEl.textContent = "Buscando productos…";
+    try {
+        const rows = await queryRows(
+            "SELECT sku, display_name, category, subcategory, unit_price, reference_price, reference_format, thumbnail, url " +
+            "FROM prices WHERE chain='mercadona' AND zone=? AND captured_at=? " +
+            "AND display_name ILIKE ? ORDER BY display_name LIMIT 50",
+            [zone, lastDate, "%" + q + "%"]
+        );
+        if (!rows.length) {
+            resultsEl.innerHTML = '<div class="empty">No se han encontrado productos con ese nombre.</div>';
+        } else {
+            resultsEl.innerHTML = rows.map((item, index) => {
+                const category = categoryFor(item.category || item.subcategory || item.display_name);
+                const image = item.thumbnail && /^https:\/\//i.test(item.thumbnail)
+                    ? '<img src="' + esc(item.thumbnail) + '" alt="">'
+                    : '<div class="merc-placeholder">🛒</div>';
+                const unit = item.reference_price == null ? "" :
+                    '<div class="merc-item-meta">' + euro(item.reference_price) + "/" +
+                    esc(item.reference_format || "") + '</div>';
+                return '<div class="merc-item">' + image +
+                    '<div class="merc-item-info"><div class="merc-item-name">' +
+                    esc(item.display_name) + '</div><div class="merc-item-meta">' +
+                    esc(item.category || item.subcategory || "Mercadona") +
+                    '</div><div class="merc-item-price">' + euro(item.unit_price) +
+                    '</div>' + unit + '</div><button class="merc-add" data-merc-add="' +
+                    index + '">Añadir</button></div>';
+            }).join("");
+            resultsEl.querySelectorAll("[data-merc-add]").forEach(button => {
+                button.addEventListener("click", () => {
+                    const item = rows[Number(button.dataset.mercAdd)];
+                    item.appCategory = categoryFor(item.category || item.subcategory || item.display_name);
+                    window.addMercadonaProduct(item);
+                    document.getElementById("add").click();
+                });
+            });
+        }
+        statusEl.textContent = rows.length + " productos encontrados · " + zone + " · " + lastDate;
+    } catch (error) {
+        statusEl.textContent = "Error al consultar los precios: " + (error && error.message ? error.message : error);
+    }
+}
+
+let searchTimer;
+$("mercQuery").addEventListener("input", () => {
+    clearTimeout(searchTimer);
+    searchTimer = setTimeout(() => searchProducts($("mercQuery").value), 300);
+});
+$("mercSearchBtn").addEventListener("click", () => searchProducts($("mercQuery").value));
+$("mercQuery").addEventListener("keydown", event => {
+    if (event.key === "Enter") searchProducts($("mercQuery").value);
+});
+
+initCatalog();
 </script>
 </body>
 </html>
