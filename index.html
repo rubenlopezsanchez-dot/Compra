@@ -5,429 +5,796 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#176b45">
-<title>Mi compra</title>
+<title>Compra - Lista y comparador</title>
 
 <style>
-*{box-sizing:border-box}
-body{margin:0;background:#f3f7f4;color:#26352a;font-family:Arial,sans-serif}
-header{background:#176b45;color:white;padding:22px;text-align:center}
-main{max-width:650px;margin:auto;padding:15px}
-.card{background:white;padding:17px;border-radius:15px;margin-bottom:15px}
-h2{font-size:19px}
-input,select{width:100%;padding:12px;border:1px solid #ddd;border-radius:9px;margin:5px 0;font-size:15px}
-button{padding:11px;border:0;border-radius:9px;cursor:pointer;font-weight:bold}
-.add{background:#176b45;color:white;width:100%;margin-top:10px}
-.tabs{display:flex;gap:8px;margin-bottom:15px}
-.tabs button{flex:1;background:white;color:#176b45}
-.tabs button.active{background:#176b45;color:white}
-.panel{display:none}
-.panel.active{display:block}
-.stores{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
-.store{background:#edf5ef;border:1px solid #dce8df;color:#26352a}
-.store.active{border:2px solid #176b45;background:#dcefe2}
-.product{padding:12px;border:1px solid #e1e8e2;border-radius:11px;margin-top:10px}
-.product.done{opacity:.55}
-.product.done .pname{text-decoration:line-through}
-.pname{font-weight:bold;font-size:16px}
-.small{font-size:12px;color:#777;margin-top:5px}
-.prices{margin-top:8px;font-size:13px;line-height:1.8}
-.actions{display:flex;gap:7px;align-items:center;margin-top:10px;flex-wrap:wrap}
-.actions input{width:65px;margin:0}
-.soft{background:#e7f2e9;color:#176b45}
-.delete{background:#ffe9e7;color:#b33b32}
-.summary{background:#e7f2e9;padding:14px;border-radius:11px;line-height:1.9;margin-top:15px}
-.summary strong{color:#176b45}
-.note{font-size:12px;color:#777;line-height:1.5}
-.empty{text-align:center;color:#888;padding:20px}
+:root {
+    --green: #176b45;
+    --light: #eaf5ee;
+    --ink: #203027;
+    --muted: #718078;
+    --line: #e3eae5;
+    --bg: #f4f7f4;
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: Arial, sans-serif;
+}
+
+header {
+    background: var(--green);
+    color: white;
+    padding: 22px 16px 18px;
+}
+
+.wrap {
+    max-width: 760px;
+    margin: auto;
+    padding: 0 14px;
+}
+
+header h1 { margin: 0; font-size: 25px; }
+header p { margin: 7px 0 0; color: #e0eee5; font-size: 14px; }
+
+main { padding: 18px 0 40px; }
+
+.tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 15px;
+}
+
+.tab {
+    flex: 1;
+    border: 1px solid var(--line);
+    background: white;
+    color: var(--green);
+    padding: 12px;
+    border-radius: 12px;
+    font-weight: bold;
+}
+
+.tab.active {
+    background: var(--green);
+    color: white;
+}
+
+.panel { display: none; }
+.panel.active { display: block; }
+
+.card {
+    background: white;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 14px;
+    box-shadow: 0 2px 8px #193c2510;
+}
+
+h2 { font-size: 18px; margin: 0 0 13px; }
+
+label {
+    display: block;
+    font-size: 12px;
+    color: var(--muted);
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+input, select {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #d7e1da;
+    border-radius: 10px;
+    background: white;
+    font-size: 15px;
+    min-width: 0;
+}
+
+.fields {
+    display: grid;
+    grid-template-columns: 1fr 100px;
+    gap: 9px;
+    margin-bottom: 10px;
+}
+
+.fields3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 9px;
+    margin-bottom: 10px;
+}
+
+button { cursor: pointer; }
+
+.primary {
+    width: 100%;
+    background: var(--green);
+    color: white;
+    border: 0;
+    padding: 13px;
+    border-radius: 10px;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.secondary {
+    background: var(--light);
+    color: var(--green);
+    border: 0;
+    border-radius: 9px;
+    padding: 9px 11px;
+    font-weight: bold;
+}
+
+.danger {
+    background: #fff0ef;
+    color: #b33b32;
+    border: 0;
+    border-radius: 9px;
+    padding: 8px 10px;
+}
+
+.store-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 9px;
+}
+
+.store {
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: white;
+    padding: 12px 7px;
+    text-align: center;
+    font-weight: bold;
+    color: var(--ink);
+}
+
+.store.selected {
+    border: 2px solid var(--green);
+    background: var(--light);
+}
+
+.store .emoji {
+    font-size: 23px;
+    display: block;
+    margin-bottom: 5px;
+}
+
+.note {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.45;
+}
+
+.product {
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 12px;
+    margin-top: 9px;
+}
+
+.product-top {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.product-info { flex: 1; min-width: 0; }
+
+.product-name {
+    font-weight: bold;
+    overflow-wrap: anywhere;
+}
+
+.small {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 4px;
+}
+
+.prices {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 9px;
+}
+
+.price-chip {
+    font-size: 12px;
+    background: #f1f5f2;
+    padding: 6px 8px;
+    border-radius: 8px;
+}
+
+.price-chip strong { color: var(--green); }
+
+.product-actions {
+    display: flex;
+    gap: 7px;
+    margin-top: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.product-actions input {
+    width: 75px;
+    padding: 8px;
+}
+
+.done { opacity: .58; }
+.done .product-name { text-decoration: line-through; }
+
+.summary {
+    background: var(--light);
+    border-radius: 12px;
+    padding: 13px;
+    line-height: 1.8;
+}
+
+.summary strong { color: var(--green); }
+
+.empty {
+    color: var(--muted);
+    font-size: 14px;
+    text-align: center;
+    padding: 18px 5px;
+}
+
+.filters {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid var(--line);
+    margin: 14px 0;
+}
+
+@media(max-width:460px) {
+    .store-grid { grid-template-columns: repeat(2, 1fr); }
+    .fields3 { grid-template-columns: 1fr 1fr; }
+    .fields3 > div:first-child { grid-column: 1 / -1; }
+}
 </style>
 </head>
 
 <body>
 
 <header>
-<h1>🛒 Mi compra</h1>
-<p>Todos tus supermercados en una sola lista</p>
+    <div class="wrap">
+        <h1>🛒 Compra</h1>
+        <p>Tu lista unificada y comparador de supermercados</p>
+    </div>
 </header>
 
-<main>
+<main class="wrap">
 
 <div class="tabs">
-<button class="active" onclick="tab('lista',this)">Mi lista</button>
-<button onclick="tab('super',this)">Supermercados</button>
+    <button class="tab active" data-tab="lista">Mi lista</button>
+    <button class="tab" data-tab="tiendas">Supermercados</button>
 </div>
 
 <section id="lista" class="panel active">
 
 <div class="card">
-<h2>Añadir producto</h2>
+    <h2>Añadir producto</h2>
 
-<label>Nombre del producto</label>
-<input id="nombre" placeholder="Ej. Leche entera 1L">
+    <div class="fields">
+        <div>
+            <label for="name">Producto</label>
+            <input id="name" placeholder="Ej. Leche entera 1 L">
+        </div>
 
-<label>Cantidad</label>
-<input id="cantidad" type="number" min="1" value="1">
+        <div>
+            <label for="qty">Cantidad</label>
+            <input id="qty" type="number" min="1" step="1" value="1">
+        </div>
+    </div>
 
-<label>Supermercado</label>
-<select id="tienda"></select>
+    <div class="fields3">
+        <div>
+            <label for="store">Supermercado</label>
+            <select id="store"></select>
+        </div>
 
-<label>Sección</label>
-<select id="seccion"></select>
+        <div>
+            <label for="category">Sección</label>
+            <select id="category"></select>
+        </div>
 
-<label>Precio por unidad (€)</label>
-<input id="precio" type="number" min="0" step="0.01" placeholder="Ej. 1.25">
+        <div>
+            <label for="price">Precio unidad (€)</label>
+            <input id="price" type="number" min="0" step="0.01" placeholder="Ej. 1,25">
+        </div>
+    </div>
 
-<button class="add" onclick="agregar()">+ Añadir producto</button>
+    <button class="primary" id="add">Añadir a mi lista</button>
 
-<p class="note">
-Si añades el mismo producto desde diferentes supermercados,
-se agrupará y se sumarán las cantidades.
-</p>
+    <p class="note">
+        Si el producto ya existe, se agrupa en una sola línea,
+        se suman las cantidades y se guarda el precio de cada supermercado.
+    </p>
 </div>
 
 <div class="card">
-<h2>Mi lista</h2>
+    <h2>Mi lista de la compra</h2>
 
-<input id="buscar" placeholder="🔎 Buscar producto..." oninput="mostrar()">
+    <div class="filters">
+        <div>
+            <label for="filterStore">Filtrar tienda</label>
+            <select id="filterStore">
+                <option value="">Todas las tiendas</option>
+            </select>
+        </div>
 
-<label>Filtrar por supermercado</label>
-<select id="filtroTienda" onchange="mostrar()">
-<option value="">Todos</option>
-</select>
+        <div>
+            <label for="filterCategory">Filtrar sección</label>
+            <select id="filterCategory">
+                <option value="">Todas las secciones</option>
+            </select>
+        </div>
+    </div>
 
-<div id="productos"></div>
+    <div id="items"></div>
 
-<div class="summary">
-<div>Productos: <strong id="totalProductos">0</strong></div>
-<div>Unidades: <strong id="unidades">0</strong></div>
-<div>Estimación más barata: <strong id="total">0,00 €</strong></div>
-<div id="totalesTiendas"></div>
-</div>
+    <hr>
 
-<button class="delete" style="width:100%;margin-top:12px" onclick="vaciar()">
-Vaciar lista
-</button>
+    <div class="summary">
+        <div>Productos: <strong id="count">0</strong></div>
+        <div>Unidades totales: <strong id="units">0</strong></div>
+        <div>Estimación más barata por producto:
+            <strong id="bestTotal">0,00 €</strong>
+        </div>
+        <div id="storeTotals"></div>
+    </div>
+
+    <button class="secondary" style="width:100%;margin-top:12px" id="clear">
+        Vaciar lista
+    </button>
 </div>
 
 </section>
 
-<section id="super" class="panel">
+<section id="tiendas" class="panel">
 
 <div class="card">
-<h2>Supermercados</h2>
-<div class="stores" id="listaTiendas"></div>
+    <h2>Supermercados</h2>
+    <p class="note">
+        Selecciona una tienda para añadir productos asociados a ella.
+        La lista general reúne los productos de todas las tiendas.
+    </p>
+    <div class="store-grid" id="storeGrid"></div>
 </div>
 
 <div class="card">
-<h2>Secciones</h2>
-<div class="stores" id="listaSecciones"></div>
+    <h2>Secciones</h2>
+    <div class="store-grid" id="categoryGrid"></div>
 </div>
 
 <div class="card">
-<h2>Comparador de precios</h2>
-<p class="note">
-Los precios se guardan por supermercado y se pueden comparar.
-En esta versión se introducen manualmente; todavía no se descargan
-automáticamente de los catálogos de las tiendas.
-</p>
+    <h2>Sobre los precios</h2>
+    <p class="note">
+        Esta versión permite guardar y comparar los precios que introduzcas.
+        Todavía no consulta automáticamente los catálogos ni los precios
+        en directo de las cadenas. Para ello hay que conectar fuentes de
+        datos oficiales o servicios que permitan acceder a sus catálogos.
+        Los precios pueden variar por tienda, zona y promociones.
+    </p>
 </div>
 
 </section>
-
 </main>
 
 <script>
 
-const tiendas = [
-"Mercadona","Carrefour","Lidl","Aldi","DIA",
-"Alcampo","Ahorramás","Eroski","Consum"
+const STORES = [
+    ["Mercadona","🟢"],
+    ["Carrefour","🔵"],
+    ["Lidl","🟡"],
+    ["Aldi","🔴"],
+    ["DIA","🔴"],
+    ["Alcampo","🔵"],
+    ["Ahorramás","🟢"],
+    ["Eroski","🔴"],
+    ["Consum","🟠"]
 ];
 
-const secciones = [
-"Alimentación y lácteos",
-"Frutas y verduras",
-"Carne y pescado",
-"Bebidas",
-"Limpieza",
-"Higiene y cuidado personal",
-"Hogar y bazar",
-"Ofertas",
-"Otros"
+const CATEGORIES = [
+    "Alimentación y lácteos",
+    "Frutas y verduras",
+    "Carne y pescado",
+    "Bebidas",
+    "Limpieza",
+    "Higiene y cuidado personal",
+    "Hogar y bazar",
+    "Ofertas",
+    "Otros"
 ];
 
-let productos = JSON.parse(localStorage.getItem("compraUnificada")) || [];
+const KEY = "compraListaUnificadaV2";
 
-function guardar(){
-localStorage.setItem("compraUnificada",JSON.stringify(productos));
+let products = [];
+
+try {
+    products = JSON.parse(localStorage.getItem(KEY)) || [];
+} catch(e) {
+    products = [];
 }
 
-function normalizar(texto){
-return texto.trim().toLowerCase()
-.normalize("NFD").replace(/[\u0300-\u036f]/g,"")
-.replace(/\s+/g," ");
-}
+let selectedStore = "Mercadona";
 
-function tab(id,boton){
-document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));
-document.querySelectorAll(".tabs button").forEach(b=>b.classList.remove("active"));
-document.getElementById(id).classList.add("active");
-boton.classList.add("active");
-}
-
-function preparar(){
-
-document.getElementById("tienda").innerHTML =
-tiendas.map(t=>`<option>${t}</option>`).join("");
-
-document.getElementById("filtroTienda").innerHTML =
-'<option value="">Todos</option>' +
-tiendas.map(t=>`<option>${t}</option>`).join("");
-
-document.getElementById("seccion").innerHTML =
-secciones.map(s=>`<option>${s}</option>`).join("");
-
-document.getElementById("listaTiendas").innerHTML =
-tiendas.map(t=>`
-<button class="store" onclick="elegirTienda('${t}')">${t}</button>
-`).join("");
-
-document.getElementById("listaSecciones").innerHTML =
-secciones.map(s=>`
-<button class="store" onclick="elegirSeccion('${s}')">${s}</button>
-`).join("");
-
-}
-
-function elegirTienda(t){
-document.getElementById("tienda").value=t;
-document.querySelector(".tabs button").click();
-}
-
-function elegirSeccion(s){
-document.getElementById("seccion").value=s;
-document.querySelector(".tabs button").click();
-}
-
-function agregar(){
-
-let nombre=document.getElementById("nombre").value.trim();
-let cantidad=Number(document.getElementById("cantidad").value);
-let tienda=document.getElementById("tienda").value;
-let seccion=document.getElementById("seccion").value;
-let precioTexto=document.getElementById("precio").value;
-let precio=precioTexto===""?null:Number(precioTexto);
-
-if(!nombre){
-alert("Escribe el nombre del producto.");
-return;
-}
-
-if(!Number.isInteger(cantidad)||cantidad<1){
-alert("Introduce una cantidad válida.");
-return;
-}
-
-if(precio!==null&&(!Number.isFinite(precio)||precio<0)){
-alert("Introduce un precio válido.");
-return;
-}
-
-let producto=productos.find(p=>normalizar(p.nombre)===normalizar(nombre));
-
-if(!producto){
-producto={
-nombre:nombre,
-cantidad:0,
-seccion:seccion,
-precios:{},
-comprado:false
-};
-productos.push(producto);
-}
-
-producto.cantidad+=cantidad;
-
-if(precio!==null){
-producto.precios[tienda]=precio;
-}
-
-guardar();
-
-document.getElementById("nombre").value="";
-document.getElementById("cantidad").value=1;
-document.getElementById("precio").value="";
-
-mostrar();
-
-}
-
-function cambiarCantidad(index,valor){
-let cantidad=Number(valor);
-
-if(!Number.isInteger(cantidad)||cantidad<1){
-alert("La cantidad debe ser mayor que cero.");
-mostrar();
-return;
-}
-
-productos[index].cantidad=cantidad;
-guardar();
-mostrar();
-}
-
-function cambiarEstado(index){
-productos[index].comprado=!productos[index].comprado;
-guardar();
-mostrar();
-}
-
-function eliminar(index){
-productos.splice(index,1);
-guardar();
-mostrar();
-}
-
-function editarPrecio(index){
-
-let producto=productos[index];
-
-let tienda=prompt(
-"Escribe el supermercado: "+tiendas.join(", ")
-);
-
-if(!tienda)return;
-
-tienda=tiendas.find(t=>t.toLowerCase()===tienda.trim().toLowerCase());
-
-if(!tienda){
-alert("Ese supermercado no existe en la lista.");
-return;
-}
-
-let valor=prompt("Precio por unidad en "+tienda+" (€):",producto.precios[tienda]??"");
-
-if(valor===null)return;
-
-if(valor.trim()===""){
-delete producto.precios[tienda];
-}else if(!Number.isFinite(Number(valor))||Number(valor)<0){
-alert("Precio incorrecto.");
-return;
-}else{
-producto.precios[tienda]=Number(valor);
-}
-
-guardar();
-mostrar();
-
-}
-
-function euros(n){
-return Number(n).toLocaleString("es-ES",{
-style:"currency",
-currency:"EUR"
+const euro = n => Number(n).toLocaleString("es-ES", {
+    style: "currency",
+    currency: "EUR"
 });
+
+const norm = s => s.trim()
+    .toLocaleLowerCase("es")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/\s+/g, " ");
+
+function save() {
+    localStorage.setItem(KEY, JSON.stringify(products));
 }
 
-function mostrar(){
+function fillSelects() {
+    const storeOptions = STORES.map(s =>
+        `<option value="${s[0]}">${s[0]}</option>`
+    ).join("");
 
-let busqueda=normalizar(document.getElementById("buscar").value);
-let filtro=document.getElementById("filtroTienda").value;
+    document.getElementById("store").innerHTML = storeOptions;
 
-let lista=productos.map((p,i)=>({...p,index:i})).filter(p=>
-normalizar(p.nombre).includes(busqueda) &&
-(!filtro || p.precios[filtro]!==undefined)
-);
+    document.getElementById("filterStore").innerHTML =
+        '<option value="">Todas las tiendas</option>' + storeOptions;
 
-let contenedor=document.getElementById("productos");
+    document.getElementById("category").innerHTML =
+        CATEGORIES.map(c => `<option>${c}</option>`).join("");
 
-if(lista.length===0){
-contenedor.innerHTML='<div class="empty">No hay productos en esta búsqueda.</div>';
-}else{
+    document.getElementById("filterCategory").innerHTML =
+        '<option value="">Todas las secciones</option>' +
+        CATEGORIES.map(c => `<option>${c}</option>`).join("");
 
-contenedor.innerHTML=lista.map(p=>{
-
-let precios=Object.entries(p.precios);
-let minimo=precios.length?
-Math.min(...precios.map(x=>x[1])):null;
-
-return `
-<div class="product ${p.comprado?'done':''}">
-<div class="pname">${escapar(p.nombre)}</div>
-<div class="small">${escapar(p.seccion)}</div>
-
-<div class="prices">
-${precios.map(([t,v])=>`${t}: <strong>${euros(v)}</strong>`).join("<br>")}
-</div>
-
-<div class="small">
-${minimo===null?"Sin precios guardados":
-"Más barato: "+euros(minimo)+" por unidad"}
-</div>
-
-<div class="actions">
-<label>Cantidad</label>
-<input type="number" min="1" value="${p.cantidad}"
-onchange="cambiarCantidad(${p.index},this.value)">
-
-<button class="soft" onclick="cambiarEstado(${p.index})">
-${p.comprado?"Pendiente":"Comprado"}
-</button>
-
-<button class="soft" onclick="editarPrecio(${p.index})">
-Precio +
-</button>
-
-<button class="delete" onclick="eliminar(${p.index})">✕</button>
-</div>
-</div>
-`;
-
-}).join("");
-
+    document.getElementById("store").value = selectedStore;
 }
 
-let unidades=productos.reduce((a,p)=>a+p.cantidad,0);
+function renderStoreGrid() {
+    document.getElementById("storeGrid").innerHTML =
+        STORES.map(s => `
+            <button class="store ${s[0] === selectedStore ? 'selected' : ''}"
+                data-store="${s[0]}">
+                <span class="emoji">${s[1]}</span>
+                ${s[0]}
+            </button>
+        `).join("");
 
-let total=productos.reduce((a,p)=>{
-let valores=Object.values(p.precios);
-return a+(valores.length?Math.min(...valores)*p.cantidad:0);
-},0);
+    document.querySelectorAll("[data-store]").forEach(b => {
+        b.onclick = () => {
+            selectedStore = b.dataset.store;
+            document.getElementById("store").value = selectedStore;
+            renderStoreGrid();
+            document.querySelector('[data-tab="lista"]').click();
+        };
+    });
 
-document.getElementById("totalProductos").textContent=productos.length;
-document.getElementById("unidades").textContent=unidades;
-document.getElementById("total").textContent=euros(total);
+    document.getElementById("categoryGrid").innerHTML =
+        CATEGORIES.map(c => `
+            <button class="store" data-category="${c}">${c}</button>
+        `).join("");
 
-document.getElementById("totalesTiendas").innerHTML=tiendas.map(t=>{
-let suma=productos.reduce((a,p)=>
-a+(p.precios[t]!==undefined?p.precios[t]*p.cantidad:0),0);
-
-let cantidad=productos.filter(p=>p.precios[t]!==undefined).length;
-
-return cantidad?
-`<div>${t}: <strong>${euros(suma)}</strong></div>`:"";
-
-}).join("");
-
+    document.querySelectorAll("[data-category]").forEach(b => {
+        b.onclick = () => {
+            document.getElementById("category").value = b.dataset.category;
+            document.querySelector('[data-tab="lista"]').click();
+        };
+    });
 }
 
-function escapar(texto){
-return String(texto).replace(/[&<>"']/g,c=>({
-"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
-}[c]));
+function addProduct() {
+    const name = document.getElementById("name").value.trim();
+    const qty = Number(document.getElementById("qty").value);
+    const store = document.getElementById("store").value;
+    const category = document.getElementById("category").value;
+    const rawPrice = document.getElementById("price").value;
+
+    const price = rawPrice === "" ? null : Number(rawPrice);
+
+    if (!name) {
+        alert("Escribe el nombre del producto.");
+        return;
+    }
+
+    if (!Number.isInteger(qty) || qty < 1) {
+        alert("La cantidad debe ser un número entero mayor que cero.");
+        return;
+    }
+
+    if (price !== null && (!Number.isFinite(price) || price < 0)) {
+        alert("Introduce un precio válido.");
+        return;
+    }
+
+    let p = products.find(x => norm(x.name) === norm(name));
+
+    if (!p) {
+        p = {
+            id: Date.now() + Math.random(),
+            name: name,
+            qty: 0,
+            category: category,
+            prices: {},
+            done: false
+        };
+
+        products.push(p);
+    }
+
+    p.qty += qty;
+
+    if (price !== null) {
+        p.prices[store] = price;
+    }
+
+    if (!p.category || p.category === "Otros") {
+        p.category = category;
+    }
+
+    save();
+
+    document.getElementById("name").value = "";
+    document.getElementById("qty").value = 1;
+    document.getElementById("price").value = "";
+
+    render();
 }
 
-function vaciar(){
-if(confirm("¿Seguro que quieres borrar toda la lista?")){
-productos=[];
-guardar();
-mostrar();
-}
+function changeQty(id, val) {
+    const p = products.find(x => x.id == id);
+    const n = Number(val);
+
+    if (!p) return;
+
+    if (!Number.isInteger(n) || n < 1) {
+        alert("La cantidad debe ser al menos 1.");
+        render();
+        return;
+    }
+
+    p.qty = n;
+    save();
+    render();
 }
 
-preparar();
-mostrar();
+function removeProduct(id) {
+    products = products.filter(p => p.id != id);
+    save();
+    render();
+}
+
+function toggleDone(id) {
+    const p = products.find(x => x.id == id);
+
+    if (p) {
+        p.done = !p.done;
+        save();
+        render();
+    }
+}
+
+function editPrice(id, store) {
+    const p = products.find(x => x.id == id);
+
+    if (!p) return;
+
+    const current = p.prices[store] ?? "";
+
+    const v = prompt(
+        "Precio por unidad en " + store +
+        " (€). Déjalo vacío para quitarlo:",
+        current
+    );
+
+    if (v === null) return;
+
+    if (v.trim() === "") {
+        delete p.prices[store];
+    } else if (!Number.isFinite(Number(v)) || Number(v) < 0) {
+        alert("Precio no válido.");
+        return;
+    } else {
+        p.prices[store] = Number(v);
+    }
+
+    save();
+    render();
+}
+
+function choosePriceStore(id) {
+    const storeNames = STORES.map(s => s[0]).join(", ");
+
+    const store = prompt(
+        "¿De qué supermercado quieres añadir o cambiar el precio?\n" +
+        storeNames,
+        selectedStore
+    );
+
+    if (!store) return;
+
+    const found = STORES.find(
+        s => s[0].toLowerCase() === store.trim().toLowerCase()
+    );
+
+    if (!found) {
+        alert("Elige uno de los supermercados de la lista.");
+        return;
+    }
+
+    editPrice(id, found[0]);
+}
+
+function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+    }[c]));
+}
+
+function render() {
+    const fs = document.getElementById("filterStore").value;
+    const fc = document.getElementById("filterCategory").value;
+
+    const list = products.filter(p =>
+        (!fc || p.category === fc) &&
+        (!fs || Object.prototype.hasOwnProperty.call(p.prices, fs))
+    );
+
+    const host = document.getElementById("items");
+
+    if (!list.length) {
+        host.innerHTML =
+            '<div class="empty">Todavía no hay productos en esta vista. Añade uno arriba.</div>';
+    } else {
+        host.innerHTML = list.map(p => {
+            const priceEntries = Object.entries(p.prices || {});
+
+            const cheapest = priceEntries.length
+                ? Math.min(...priceEntries.map(x => x[1]))
+                : null;
+
+            const chips = priceEntries.map(([s, v]) => `
+                <span class="price-chip">
+                    ${escapeHtml(s)}: <strong>${euro(v)}</strong>
+                </span>
+            `).join("");
+
+            const priceLine = cheapest === null
+                ? '<span class="small">Sin precios guardados</span>'
+                : `<span class="small">Más barato: ${euro(cheapest)} / unidad · Subtotal: ${euro(cheapest * p.qty)}</span>`;
+
+            return `
+                <div class="product ${p.done ? 'done' : ''}">
+                    <div class="product-top">
+                        <div class="product-info">
+                            <div class="product-name">${escapeHtml(p.name)}</div>
+                            <div class="small">${escapeHtml(p.category || "Otros")}</div>
+                            <div class="prices">${chips}</div>
+                            ${priceLine}
+                        </div>
+
+                        <button class="danger" data-remove="${p.id}">
+                            ✕
+                        </button>
+                    </div>
+
+                    <div class="product-actions">
+                        <label style="margin:0">Cantidad</label>
+                        <input aria-label="Cantidad" type="number"
+                            min="1" step="1" value="${p.qty}"
+                            data-qty="${p.id}">
+
+                        <button class="secondary" data-done="${p.id}">
+                            ${p.done ? 'Desmarcar' : 'Comprado'}
+                        </button>
+
+                        <button class="secondary" data-edit="${p.id}">
+                            Precio +
+                        </button>
+                    </div>
+                </div>
+            `;
+        }).join("");
+    }
+
+    host.querySelectorAll("[data-remove]").forEach(b =>
+        b.onclick = () => removeProduct(b.dataset.remove)
+    );
+
+    host.querySelectorAll("[data-done]").forEach(b =>
+        b.onclick = () => toggleDone(b.dataset.done)
+    );
+
+    host.querySelectorAll("[data-qty]").forEach(b =>
+        b.onchange = () => changeQty(b.dataset.qty, b.value)
+    );
+
+    host.querySelectorAll("[data-edit]").forEach(b =>
+        b.onclick = () => choosePriceStore(b.dataset.edit)
+    );
+
+    const units = products.reduce((a, p) => a + p.qty, 0);
+
+    const best = products.reduce((a, p) => {
+        const vals = Object.values(p.prices || {});
+        return a + (vals.length ? Math.min(...vals) * p.qty : 0);
+    }, 0);
+
+    document.getElementById("count").textContent = products.length;
+    document.getElementById("units").textContent = units;
+    document.getElementById("bestTotal").textContent = euro(best);
+
+    document.getElementById("storeTotals").innerHTML =
+        STORES.map(([s]) => {
+            let sum = 0;
+            let n = 0;
+
+            products.forEach(p => {
+                if (p.prices && p.prices[s] !== undefined) {
+                    sum += p.prices[s] * p.qty;
+                    n++;
+                }
+            });
+
+            return n
+                ? `<div>${s}: <strong>${euro(sum)}</strong>
+                    <span class="note">(${n} productos con precio)</span></div>`
+                : "";
+        }).join("");
+}
+
+document.querySelectorAll(".tab").forEach(b => {
+    b.onclick = () => {
+        document.querySelectorAll(".tab,.panel").forEach(x =>
+            x.classList.remove("active")
+        );
+
+        b.classList.add("active");
+        document.getElementById(b.dataset.tab).classList.add("active");
+    };
+});
+
+document.getElementById("add").onclick = addProduct;
+
+document.getElementById("clear").onclick = () => {
+    if (confirm("¿Seguro que quieres borrar toda tu lista? Esta acción no se puede deshacer.")) {
+        products = [];
+        save();
+        render();
+    }
+};
+
+document.getElementById("filterStore").onchange = render;
+document.getElementById("filterCategory").onchange = render;
+
+document.getElementById("name").addEventListener("keydown", e => {
+    if (e.key === "Enter") addProduct();
+});
+
+fillSelects();
+renderStoreGrid();
+render();
 
 </script>
-
 </body>
 </html>
