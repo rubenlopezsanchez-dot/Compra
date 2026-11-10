@@ -1,0 +1,303 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#27834c">
+<title>Mi lista de la compra</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #f1f6f2;
+    color: #26352a;
+    margin: 0;
+    padding: 20px 12px;
+}
+
+.contenedor {
+    max-width: 500px;
+    margin: auto;
+    background: white;
+    padding: 22px;
+    border-radius: 18px;
+    box-shadow: 0 4px 15px #0001;
+}
+
+h1 {
+    color: #27834c;
+    text-align: center;
+}
+
+.subtitulo {
+    text-align: center;
+    color: #777;
+}
+
+input {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 9px;
+    font-size: 15px;
+    min-width: 0;
+}
+
+.campos {
+    display: grid;
+    grid-template-columns: 1fr 75px 85px;
+    gap: 7px;
+    margin-top: 20px;
+}
+
+button {
+    border: none;
+    border-radius: 9px;
+    padding: 12px;
+    background: #27834c;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+#agregar {
+    width: 100%;
+    margin-top: 10px;
+}
+
+.producto {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #f1f6f2;
+    padding: 12px;
+    border-radius: 10px;
+    margin-top: 10px;
+}
+
+.producto input {
+    width: 20px;
+    height: 20px;
+    accent-color: #27834c;
+}
+
+.info {
+    flex: 1;
+    min-width: 0;
+}
+
+.nombre {
+    font-weight: bold;
+    overflow-wrap: anywhere;
+}
+
+.detalle {
+    color: #777;
+    font-size: 13px;
+    margin-top: 4px;
+}
+
+.comprado .nombre {
+    text-decoration: line-through;
+    color: #999;
+}
+
+.eliminar {
+    background: #e65c5c;
+    padding: 9px 11px;
+}
+
+.resumen {
+    background: #e5f3e9;
+    padding: 15px;
+    border-radius: 12px;
+    margin-top: 20px;
+    line-height: 1.8;
+}
+
+.vaciar {
+    background: #777;
+    width: 100%;
+    margin-top: 15px;
+}
+
+h3 {
+    margin-top: 25px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="contenedor">
+
+<h1>🛒 Mi compra</h1>
+<p class="subtitulo">Organiza tu lista de la compra</p>
+
+<div class="campos">
+    <input id="nombre" placeholder="Producto">
+    <input id="cantidad" type="number" min="1" value="1" placeholder="Cant.">
+    <input id="precio" type="number" min="0" step="0.01" placeholder="Precio €">
+</div>
+
+<button id="agregar" onclick="agregarProducto()">+ Añadir producto</button>
+
+<h3>Productos pendientes</h3>
+<div id="pendientes"></div>
+
+<h3>Productos comprados</h3>
+<div id="comprados"></div>
+
+<div class="resumen">
+    <strong>Total estimado:</strong> <span id="total">0,00 €</span><br>
+    <strong>Pendiente de comprar:</strong> <span id="pendiente">0,00 €</span><br>
+    <strong>Productos:</strong> <span id="contador">0</span>
+</div>
+
+<button class="vaciar" onclick="vaciarLista()">Vaciar lista</button>
+
+</div>
+
+<script>
+let productos = JSON.parse(localStorage.getItem("miCompra")) || [];
+
+function guardar() {
+    localStorage.setItem("miCompra", JSON.stringify(productos));
+}
+
+function agregarProducto() {
+    const nombre = document.getElementById("nombre").value.trim();
+    const cantidad = Number(document.getElementById("cantidad").value);
+    const precio = Number(document.getElementById("precio").value);
+
+    if (!nombre) {
+        alert("Escribe el nombre del producto");
+        return;
+    }
+
+    if (!Number.isInteger(cantidad) || cantidad < 1 ||
+        !Number.isFinite(precio) || precio < 0) {
+        alert("Comprueba la cantidad y el precio");
+        return;
+    }
+
+    productos.push({
+        nombre: nombre,
+        cantidad: cantidad,
+        precio: precio,
+        comprado: false
+    });
+
+    document.getElementById("nombre").value = "";
+    document.getElementById("cantidad").value = 1;
+    document.getElementById("precio").value = "";
+
+    guardar();
+    mostrar();
+}
+
+function cambiarEstado(index) {
+    productos[index].comprado = !productos[index].comprado;
+    guardar();
+    mostrar();
+}
+
+function eliminarProducto(index) {
+    productos.splice(index, 1);
+    guardar();
+    mostrar();
+}
+
+function vaciarLista() {
+    if (confirm("¿Quieres borrar toda la lista?")) {
+        productos = [];
+        guardar();
+        mostrar();
+    }
+}
+
+function mostrar() {
+    const pendientes = document.getElementById("pendientes");
+    const comprados = document.getElementById("comprados");
+
+    pendientes.innerHTML = "";
+    comprados.innerHTML = "";
+
+    let total = 0;
+    let totalPendiente = 0;
+
+    productos.forEach((p, index) => {
+        const subtotal = p.cantidad * p.precio;
+        total += subtotal;
+
+        if (!p.comprado) {
+            totalPendiente += subtotal;
+        }
+
+        const elemento = document.createElement("div");
+        elemento.className = "producto" + (p.comprado ? " comprado" : "");
+
+        const check = document.createElement("input");
+        check.type = "checkbox";
+        check.checked = p.comprado;
+        check.onchange = () => cambiarEstado(index);
+
+        const info = document.createElement("div");
+        info.className = "info";
+
+        const nombre = document.createElement("div");
+        nombre.className = "nombre";
+        nombre.textContent = p.nombre;
+
+        const detalle = document.createElement("div");
+        detalle.className = "detalle";
+        detalle.textContent =
+            p.cantidad + " × " + p.precio.toFixed(2) +
+            " € = " + subtotal.toFixed(2) + " €";
+
+        const boton = document.createElement("button");
+        boton.className = "eliminar";
+        boton.textContent = "✕";
+        boton.onclick = () => eliminarProducto(index);
+
+        info.appendChild(nombre);
+        info.appendChild(detalle);
+
+        elemento.appendChild(check);
+        elemento.appendChild(info);
+        elemento.appendChild(boton);
+
+        if (p.comprado) {
+            comprados.appendChild(elemento);
+        } else {
+            pendientes.appendChild(elemento);
+        }
+    });
+
+    if (pendientes.innerHTML === "") {
+        pendientes.textContent = "No tienes productos pendientes.";
+    }
+
+    if (comprados.innerHTML === "") {
+        comprados.textContent = "Todavía no has comprado nada.";
+    }
+
+    document.getElementById("total").textContent = total.toFixed(2) + " €";
+    document.getElementById("pendiente").textContent =
+        totalPendiente.toFixed(2) + " €";
+    document.getElementById("contador").textContent = productos.length;
+}
+
+document.getElementById("nombre").addEventListener("keydown", e => {
+    if (e.key === "Enter") agregarProducto();
+});
+
+mostrar();
+</script>
+
+</body>
+</html>
