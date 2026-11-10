@@ -523,6 +523,63 @@ input:focus, select:focus {
     .product { box-shadow: 0 3px 10px #193c250a; }
 }
 
+
+/* Interfaz más sencilla, visual e intuitiva */
+:root { --green:#16784e; --light:#eaf7ef; --bg:#f7faf8; --line:#e5eee8; }
+.wrap { max-width:680px; }
+header { padding:21px 16px; }
+header h1 { font-size:27px; display:flex; align-items:center; gap:9px; }
+header::after { content:"🛍️"; font-size:68px; opacity:.17; }
+.tabs { gap:9px; }
+.tab { display:flex; align-items:center; justify-content:center; gap:7px; border-radius:14px; padding:13px 8px; }
+.tab:first-child::before { content:"🛒"; font-size:17px; }
+.tab:last-child::before { content:"🏪"; font-size:17px; }
+.card { padding:17px; border-radius:17px; }
+h2 { font-size:17px; gap:9px; }
+h2::before { display:inline-grid; place-items:center; width:32px; height:32px; border-radius:10px; background:#eaf7ef; font-size:17px; }
+#lista .card:first-child h2::before { content:"➕"; }
+#lista .card:nth-child(2) h2::before { content:"🧺"; }
+#tiendas .card:first-child h2::before { content:"🏪"; }
+#tiendas .card:nth-child(2) h2::before { content:"🗂️"; }
+#tiendas .card:nth-child(3) h2::before { content:"ℹ️"; }
+label { font-size:12px; }
+label[for="name"]::before { content:"📦 "; }
+label[for="qty"]::before { content:"🔢 "; }
+label[for="store"]::before, label[for="filterStore"]::before { content:"🏪 "; }
+label[for="category"]::before, label[for="filterCategory"]::before { content:"🗂️ "; }
+label[for="price"]::before { content:"💶 "; }
+.primary { display:flex; align-items:center; justify-content:center; gap:8px; }
+.primary::before { content:"＋"; font-size:20px; line-height:12px; }
+.store { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px; min-height:80px; border-radius:14px; }
+.store .emoji { font-size:25px; }
+.store.selected { background:#eaf7ef; color:#126b43; }
+#categoryGrid .store { line-height:1.25; font-size:12px; }
+#categoryGrid .store:nth-child(1)::before { content:"🥛"; }
+#categoryGrid .store:nth-child(2)::before { content:"🥑"; }
+#categoryGrid .store:nth-child(3)::before { content:"🥩"; }
+#categoryGrid .store:nth-child(4)::before { content:"🥤"; }
+#categoryGrid .store:nth-child(5)::before { content:"🧽"; }
+#categoryGrid .store:nth-child(6)::before { content:"🧴"; }
+#categoryGrid .store:nth-child(7)::before { content:"🏠"; }
+#categoryGrid .store:nth-child(8)::before { content:"🏷️"; }
+#categoryGrid .store:nth-child(9)::before { content:"📦"; }
+#categoryGrid .store::before { font-size:24px; }
+.summary { display:grid; gap:7px; }
+.summary > div { display:flex; justify-content:space-between; align-items:center; gap:10px; }
+.summary strong { white-space:nowrap; }
+.product { padding:14px 13px; border-radius:14px; }
+.product-actions button { border-radius:10px; }
+.danger { min-width:40px; min-height:40px; font-size:15px; }
+.empty::before { content:"🧺"; display:block; font-size:30px; margin-bottom:8px; }
+@media(max-width:600px) {
+  header { padding:19px 14px; }
+  header h1 { font-size:25px; }
+  .card { padding:14px; }
+  .tab { font-size:14px; }
+  .category-store { min-height:86px; }
+  .product-actions { grid-template-columns:58px minmax(55px,1fr) 1fr 1fr; }
+}
+
 </style>
 </head>
 
