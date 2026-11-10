@@ -524,6 +524,20 @@ input:focus, select:focus {
 }
 
 
+/* Catálogo online y cobertura de datos */
+.catalog-source { border:1px solid var(--line); border-radius:13px; padding:14px; margin-top:12px; background:#fbfefc; }
+.catalog-source-head { display:flex; justify-content:space-between; align-items:flex-start; gap:8px; flex-wrap:wrap; }
+.source-status { font-size:11px; color:#16734b; background:#eaf7ef; padding:5px 8px; border-radius:20px; }
+.source-link { display:flex; justify-content:space-between; align-items:center; margin-top:12px; padding:12px 13px; border-radius:10px; color:white; background:linear-gradient(135deg,#16734b,#23945f); text-decoration:none; font-weight:bold; }
+.coverage-row { display:flex; justify-content:space-between; align-items:flex-start; gap:12px; padding:11px 0; border-bottom:1px solid var(--line); font-size:13px; }
+.coverage-row:last-of-type { border-bottom:0; }
+.coverage-row strong { min-width:125px; }
+.coverage-good,.coverage-partial,.coverage-no { text-align:right; font-size:12px; }
+.coverage-good { color:#16734b; }
+.coverage-partial { color:#9a6a12; }
+.coverage-no { color:#9b5148; }
+@media(max-width:600px) { .coverage-row { display:block; } .coverage-row span { display:block; text-align:left; margin-top:5px; } }
+
 /* Interfaz más sencilla, visual e intuitiva */
 :root { --green:#16784e; --light:#eaf7ef; --bg:#f7faf8; --line:#e5eee8; }
 .wrap { max-width:680px; }
@@ -597,6 +611,7 @@ label[for="price"]::before { content:"💶 "; }
 <div class="tabs">
     <button class="tab active" data-tab="lista">Mi lista</button>
     <button class="tab" data-tab="tiendas">Supermercados</button>
+    <button class="tab" data-tab="catalogo">Catálogo</button>
 </div>
 
 <section id="lista" class="panel active">
@@ -707,6 +722,45 @@ label[for="price"]::before { content:"💶 "; }
     </p>
 </div>
 
+</section>
+
+<section id="catalogo" class="panel">
+    <div class="card">
+        <h2>Precios y productos de tu zona</h2>
+        <p class="note">Código postal configurado: <strong>28047 · Madrid</strong>. Desde aquí puedes consultar catálogos y comparadores que publican precios reales. Los precios pueden variar según la tienda y la fecha de actualización.</p>
+        <div class="catalog-source">
+            <div class="catalog-source-head">
+                <strong>OpenCesta · catálogo de Madrid</strong>
+                <span class="source-status">Datos de Mercadona y Ahorramás</span>
+            </div>
+            <p class="note">Publica snapshots diarios de productos y precios para la zona de Madrid. También incluye datos de DIA, aunque su zona no está individualizada por código postal.</p>
+            <a class="source-link" href="https://ruvelro.github.io/opencesta/" target="_blank" rel="noopener">Abrir catálogo y comparador <span>↗</span></a>
+        </div>
+        <div class="catalog-source">
+            <div class="catalog-source-head">
+                <strong>CholloSúper · comparador por código postal</strong>
+                <span class="source-status">Permite consultar tu zona</span>
+            </div>
+            <p class="note">Compara productos y cestas de varias cadenas. En DIA, Carrefour y Consum el precio puede cambiar según la tienda; introduce el código postal 28047 al entrar para consultar la zona correspondiente.</p>
+            <a class="source-link" href="https://chollosuper.com/" target="_blank" rel="noopener">Abrir comparador de precios <span>↗</span></a>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Qué supermercados tienen datos</h2>
+        <div class="coverage-row"><strong>Mercadona</strong><span class="coverage-good">Catálogo y precios · Madrid</span></div>
+        <div class="coverage-row"><strong>Ahorramás</strong><span class="coverage-good">Catálogo y precios · Madrid</span></div>
+        <div class="coverage-row"><strong>DIA</strong><span class="coverage-partial">Precios disponibles · zona general</span></div>
+        <div class="coverage-row"><strong>Carrefour / Alcampo</strong><span class="coverage-no">Sin fuente automática fiable</span></div>
+        <div class="coverage-row"><strong>Lidl / Aldi</strong><span class="coverage-no">No publican un catálogo completo de alimentación con precios online</span></div>
+        <div class="coverage-row"><strong>Eroski</strong><span class="coverage-partial">Fuente viable, integración pendiente</span></div>
+        <p class="note">No se inventan precios ni se copian precios de otra provincia como si fueran de 28047. La integración automática dentro de esta app requiere un servicio que actualice el catálogo y lo entregue a GitHub Pages; la web estática por sí sola no puede ejecutar esa recogida diaria.</p>
+    </div>
+    <div class="card">
+        <h2>Fuentes y actualización</h2>
+        <p class="note">OpenCesta publica datos abiertos con histórico y cobertura de Madrid. CholloSúper publica datos abiertos con licencia CC BY 4.0, pero sus ficheros públicos generales usan Cataluña como zona por defecto para algunas cadenas; para DIA, Carrefour y Consum hay que consultar el código postal en su comparador.</p>
+        <p class="note">Fuentes: <a href="https://github.com/ruvelro/opencesta" target="_blank" rel="noopener">OpenCesta</a> · <a href="https://chollosuper.com/datos" target="_blank" rel="noopener">CholloSúper – datos abiertos</a>.</p>
+    </div>
 </section>
 </main>
 
