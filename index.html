@@ -1257,6 +1257,7 @@ async function initCatalog() {
 
         if (chainZones.mercadona && !chainZones.mercadona.includes(mercadonaZone)) {
             mercadonaZone = chainZones.mercadona.includes("mad1") ? "mad1" : chainZones.mercadona[0];
+            mercadonaZoneResolved = false;
         }
         storeSelect.innerHTML = '<option value="">Todas las tiendas disponibles</option>' +
             availableChains.map(chain => '<option value="' + esc(chain) + '">' + chainNames[chain] + '</option>').join("");
