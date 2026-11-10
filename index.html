@@ -739,7 +739,7 @@ label[for="price"]::before { content:"💶 "; }
 <section id="catalogo" class="panel">
     <div class="card">
         <h2>Catálogo de Mercadona</h2>
-        <p class="note">Busca productos y añádelos a tu lista con el precio del último catálogo publicado. Código postal: <strong>28047 · Madrid</strong>.</p>
+        <p class="note">Los productos y sus precios se muestran aquí mismo, sin salir de Compra. Busca por nombre y pulsa «Añadir» para guardarlos con su precio. Código postal configurado: <strong>28047 · Madrid</strong>.</p>
         <div class="merc-search">
             <input id="mercQuery" type="search" placeholder="Busca leche, arroz, aceite, yogur..." value="leche" autocomplete="off">
             <button class="primary" id="mercSearchBtn">Buscar productos</button>
@@ -749,7 +749,7 @@ label[for="price"]::before { content:"💶 "; }
     </div>
     <div class="card">
         <h2>Sobre los precios</h2>
-        <p class="note">Los precios proceden de snapshots públicos de OpenCesta, actualizados diariamente. La aplicación intenta resolver el almacén correspondiente al CP 28047 con la API de Mercadona. Si el navegador no permite esa consulta, indicará que usa la zona general de Madrid (mad1), que puede no coincidir exactamente con tu tienda.</p>
+        <p class="note">Los precios se consultan y se presentan dentro de esta misma web a partir del catálogo público de OpenCesta. La app intenta resolver el almacén del CP 28047; si no puede confirmarlo desde el navegador, utiliza la zona general de Madrid (mad1) y lo indica en pantalla. La fecha de captura aparece junto al estado del catálogo.</p>
         <p class="note">Fuente: <a href="https://github.com/ruvelro/opencesta" target="_blank" rel="noopener">OpenCesta · datos abiertos e histórico de precios</a>. Los precios pueden variar por zona y fecha.</p>
     </div>
 </section>
@@ -1268,7 +1268,7 @@ async function searchProducts(value) {
     statusEl.textContent = "Buscando productos…";
     try {
         const rows = await queryRows(
-            "SELECT sku, display_name, category, subcategory, unit_price, reference_price, reference_format, thumbnail, url " +
+            "SELECT sku, display_name, category, subcategory, unit_price, reference_price, reference_format, url " +
             "FROM prices WHERE chain='mercadona' AND zone=? AND captured_at=? " +
             "AND display_name ILIKE ? ORDER BY display_name LIMIT 50",
             [zone, lastDate, "%" + q + "%"]
@@ -1278,9 +1278,7 @@ async function searchProducts(value) {
         } else {
             resultsEl.innerHTML = rows.map((item, index) => {
                 const category = categoryFor(item.category || item.subcategory || item.display_name);
-                const image = item.thumbnail && /^https:\/\//i.test(item.thumbnail)
-                    ? '<img src="' + esc(item.thumbnail) + '" alt="">'
-                    : '<div class="merc-placeholder">🛒</div>';
+                const image = '<div class="merc-placeholder" aria-hidden="true">🛒</div>';
                 const unit = item.reference_price == null ? "" :
                     '<div class="merc-item-meta">' + euro(item.reference_price) + "/" +
                     esc(item.reference_format || "") + '</div>';
